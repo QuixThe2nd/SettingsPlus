@@ -8,6 +8,18 @@ SettingsPlus is a small macOS desktop app (Electron + React) that lists curated 
 
 This project is **100% AI-generated**—one of those “someday I’ll build this” ideas that sat in the backlog until I had an assistant crank out a working version. Treat it as a scratchpad / experiment, not a statement of craftsmanship or a promise of maintenance.
 
+## Screenshots
+
+Browse the catalog and empty inspector when nothing is selected:
+
+![SettingsPlus main window — list and inspector](docs/screenshots/overview.png)
+
+Inspector with preview, parameters, and toolbar batch apply:
+
+![SettingsPlus — setting detail and Apply pending](docs/screenshots/detail.png)
+
+*(Images are stylized README previews, not guaranteed pixel-perfect to your local build.)*
+
 ## Disclaimer
 
 This software can change system and user preferences, restart UI services, log you out, or reboot your Mac when you ask it to. You are responsible for what you run. There is no warranty; see [LICENSE](LICENSE).
