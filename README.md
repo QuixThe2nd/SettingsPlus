@@ -26,15 +26,13 @@ This software can change system and user preferences, restart UI services, log y
 
 ### Gatekeeper (unnotarized downloads)
 
-Releases are **not** Apple-notarized. After you mount the DMG, **double-click `Open first time.command`** next to the app — it runs `xattr -cr` on the bundle (clears the download quarantine flag) and launches SettingsPlus. Same pattern a lot of indie / sideloaded macOS software uses.
+Releases are **not** Apple-notarized. After you mount the DMG, **double-click `Install SettingsPlus.command`** — it **copies the app into `/Applications`**, runs **`xattr -cr`** on that copy (clears quarantine), then opens it. If macOS asks for your password, that’s only so the installer can write to `/Applications`.
 
-If you already dragged the app to **Applications**, run once in Terminal (then open from Launchpad or Spotlight as usual):
+If you installed by dragging the `.app` yourself, run once in Terminal:
 
 ```bash
 xattr -cr /Applications/SettingsPlus.app
 ```
-
-(`~/Applications` works too if you put it there.)
 
 ## Development
 
@@ -46,14 +44,14 @@ npm run dev
 - **Typecheck:** `npm run typecheck`
 - **Unit tests:** `npm run test`
 - **Production bundle (no installer):** `npm run build`
-- **Packaged app (unsigned):** `npm run dist` writes `release/mac-<arch>/SettingsPlus.app` (see [electron-builder.yml](electron-builder.yml)). DMG builds (CI) include **`Open first time.command`** on the disk image; see [Gatekeeper](#gatekeeper-unnotarized-downloads) above.
+- **Packaged app (unsigned):** `npm run dist` writes `release/mac-<arch>/SettingsPlus.app` (see [electron-builder.yml](electron-builder.yml)). DMG builds (CI) include **`Install SettingsPlus.command`** on the disk image; see [Gatekeeper](#gatekeeper-unnotarized-downloads) above.
 
 ### Where are the builds?
 
 Two different places on GitHub—easy to mix up:
 
 1. **Actions → workflow run → Artifacts** (zip download at the bottom of a run).  
-   On every push to `main` / `master`, [`.github/workflows/macos-dmg.yml`](.github/workflows/macos-dmg.yml) builds three **unsigned** DMGs and uploads them as **`SettingsPlus-dmgs-*`** artifacts. Names follow **`SettingsPlus-X.Y.Z.dmg`** (universal — default, best for almost everyone), **`SettingsPlus-X.Y.Z-silicon.dmg`** (Apple Silicon only), **`SettingsPlus-X.Y.Z-intel.dmg`** (Intel only). Each DMG includes **`Open first time.command`** (runs `xattr` then opens the app). Nothing is posted to the **Releases** tab from this workflow.
+   On every push to `main` / `master`, [`.github/workflows/macos-dmg.yml`](.github/workflows/macos-dmg.yml) builds three **unsigned** DMGs and uploads them as **`SettingsPlus-dmgs-*`** artifacts. Names follow **`SettingsPlus-X.Y.Z.dmg`** (universal — default, best for almost everyone), **`SettingsPlus-X.Y.Z-silicon.dmg`** (Apple Silicon only), **`SettingsPlus-X.Y.Z-intel.dmg`** (Intel only). Each DMG includes **`Install SettingsPlus.command`** (copies to `/Applications`, `xattr`, then opens). Nothing is posted to the **Releases** tab from this workflow.
 
 2. **Releases** (what the in-app “newer version” check uses).  
    GitHub’s API only lists **published releases**. Pushes to `main` do **not** create a release by themselves. Each release is created by [`.github/workflows/release-github.yml`](.github/workflows/release-github.yml) when you push a **new** `v*` tag (usually after bumping `version` in `package.json` so filenames match):

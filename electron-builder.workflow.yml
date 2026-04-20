@@ -37,7 +37,7 @@ dmg:
       y: 220
       type: file
       path: build/open-settingsplus.command
-      name: "Open first time.command"
+      name: "Install SettingsPlus.command"
     - x: 420
       y: 220
       type: link
