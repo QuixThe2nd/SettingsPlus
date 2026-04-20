@@ -4,6 +4,10 @@ SettingsPlus is a small macOS desktop app (Electron + React) that lists curated 
 
 **Requirements:** macOS. The app is not useful on other platforms; the main process exits on startup unless you set `SETTINGSPLUS_ALLOW_NON_DARWIN` (see below).
 
+## About this repo
+
+This project is **100% AI-generated**—one of those “someday I’ll build this” ideas that sat in the backlog until I had an assistant crank out a working version. Treat it as a scratchpad / experiment, not a statement of craftsmanship or a promise of maintenance.
+
 ## Disclaimer
 
 This software can change system and user preferences, restart UI services, log you out, or reboot your Mac when you ask it to. You are responsible for what you run. There is no warranty; see [LICENSE](LICENSE).
