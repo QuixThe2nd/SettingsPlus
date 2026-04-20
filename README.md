@@ -56,15 +56,15 @@ Two different places on GitHub—easy to mix up:
    On every push to `main` / `master`, [`.github/workflows/macos-dmg.yml`](.github/workflows/macos-dmg.yml) builds three **unsigned** DMGs and uploads them as **`SettingsPlus-dmgs-*`** artifacts. Names follow **`SettingsPlus-X.Y.Z.dmg`** (universal — default, best for almost everyone), **`SettingsPlus-X.Y.Z-silicon.dmg`** (Apple Silicon only), **`SettingsPlus-X.Y.Z-intel.dmg`** (Intel only). Each DMG includes **`Open first time.command`** (runs `xattr` then opens the app). Nothing is posted to the **Releases** tab from this workflow.
 
 2. **Releases** (what the in-app “newer version” check uses).  
-   GitHub’s API only lists **published releases**. Those are created by [`.github/workflows/release-github.yml`](.github/workflows/release-github.yml) when you push a **version tag** whose name starts with `v`:
+   GitHub’s API only lists **published releases**. Pushes to `main` do **not** create a release by themselves. Each release is created by [`.github/workflows/release-github.yml`](.github/workflows/release-github.yml) when you push a **new** `v*` tag (usually after bumping `version` in `package.json` so filenames match):
 
    ```bash
-   # After bumping "version" in package.json and committing:
-   git tag v0.1.1
-   git push origin v0.1.1
+   # Example: ship 0.1.2 after editing package.json "version" to 0.1.2 and committing:
+   git tag v0.1.2
+   git push origin v0.1.2
    ```
 
-   That run builds the same three DMGs and attaches them to a new release for that tag (via `softprops/action-gh-release`).
+   That workflow builds the three DMGs and attaches them to a new GitHub Release for that tag (`softprops/action-gh-release`).
 
 Packaging uses [electron-builder.workflow.yml](electron-builder.workflow.yml) in CI (DMG only). Local `npm run dist` still uses the `dir` target from [electron-builder.yml](electron-builder.yml).
 
