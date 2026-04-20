@@ -36,7 +36,25 @@ npm run dev
 - **Production bundle (no installer):** `npm run build`
 - **Packaged app (unsigned OK for local use):** `npm run dist` writes `release/mac-<arch>/SettingsPlus.app` (see [electron-builder.yml](electron-builder.yml)). For sharing publicly, configure Apple **Developer ID** signing and **notarization** (see [Electron code signing](https://www.electron.build/code-signing)).
 
-**CI DMGs:** On every push to `main` / `master`, [`.github/workflows/macos-dmg.yml`](.github/workflows/macos-dmg.yml) builds three **unsigned** disk images (Apple Silicon `arm64`, Intel `x64`, and **universal**). Download them from the workflow run’s **Artifacts** (`SettingsPlus-dmgs-*`). CI uses [electron-builder.workflow.yml](electron-builder.workflow.yml) (DMG only); local `npm run dist` still uses the `dir` target from [electron-builder.yml](electron-builder.yml).
+### Where are the builds?
+
+Two different places on GitHub—easy to mix up:
+
+1. **Actions → workflow run → Artifacts** (zip download at the bottom of a run).  
+   On every push to `main` / `master`, [`.github/workflows/macos-dmg.yml`](.github/workflows/macos-dmg.yml) builds three **unsigned** DMGs (Apple Silicon `arm64`, Intel `x64`, **universal**) and uploads them as **`SettingsPlus-dmgs-*`** artifacts. Nothing is posted to the **Releases** tab from this workflow.
+
+2. **Releases** (what the in-app “newer version” check uses).  
+   GitHub’s API only lists **published releases**. Those are created by [`.github/workflows/release-github.yml`](.github/workflows/release-github.yml) when you push a **version tag** whose name starts with `v`:
+
+   ```bash
+   # After bumping "version" in package.json and committing:
+   git tag v0.1.1
+   git push origin v0.1.1
+   ```
+
+   That run builds the same three DMGs and attaches them to a new release for that tag (via `softprops/action-gh-release`).
+
+Packaging uses [electron-builder.workflow.yml](electron-builder.workflow.yml) in CI (DMG only). Local `npm run dist` still uses the `dir` target from [electron-builder.yml](electron-builder.yml).
 
 ### Non-macOS guard
 

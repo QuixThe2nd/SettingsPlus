@@ -1,0 +1,56 @@
+# Publishes a GitHub Release (Releases tab) with DMG assets when you push a version tag.
+# Example: bump package.json "version", commit, then:
+#   git tag v0.1.1 && git push origin v0.1.1
+name: Publish GitHub Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build DMGs and attach to release
+    runs-on: macos-latest
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Ensure python is on PATH (blockmap tooling)
+        run: |
+          if command -v python >/dev/null 2>&1; then
+            echo "python already available: $(command -v python)"
+          else
+            sudo mkdir -p /usr/local/bin
+            sudo ln -sf "$(command -v python3)" /usr/local/bin/python
+            echo "Linked python -> $(command -v python3)"
+          fi
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: DMG — Apple Silicon (arm64)
+        run: npx electron-builder --config electron-builder.workflow.yml --mac dmg --arm64 --publish never
+
+      - name: DMG — Intel (x64)
+        run: npx electron-builder --config electron-builder.workflow.yml --mac dmg --x64 --publish never
+
+      - name: DMG — Universal (arm64 + x64)
+        run: npx electron-builder --config electron-builder.workflow.yml --mac dmg --universal --publish never
+
+      - name: Publish release with DMGs
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*.dmg
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
