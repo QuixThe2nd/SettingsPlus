@@ -1,0 +1,24 @@
+# Distributable macOS app. Code signing + notarization use your local Apple credentials
+# when you run `npm run dist` (see https://www.electron.build/code-signing).
+appId: dev.settingsplus.app
+productName: SettingsPlus
+copyright: Copyright © 2026 SettingsPlus contributors
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - package.json
+  - out/**/*
+
+asar: true
+
+mac:
+  category: public.app-category.utilities
+  # `dir` avoids DMG tooling and zip blockmaps (which may require a `python` shim on some machines).
+  target:
+    - dir
+  hardenedRuntime: true
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
