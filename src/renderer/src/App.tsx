@@ -479,7 +479,7 @@ export function App(): ReactElement {
     <ShellChrome isMac={isMac}>
       <aside className="ss-sidebar">
         <div className="ss-brand">Settings</div>
-        <div className="ss-brand-sub">CLI-backed macOS preferences</div>
+        <div className="ss-brand-sub">Hidden macOS tweaks, made obvious</div>
         <div className="ss-search-wrap">
           <input
             className="ss-search"

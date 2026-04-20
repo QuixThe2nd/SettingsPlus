@@ -1,8 +1,8 @@
 # SettingsPlus
 
-SettingsPlus is a small macOS desktop app (Electron + React) that lists curated **defaults**, **pmset**, **networksetup**, **scutil**, **systemsetup**, **mdutil**, and **softwareupdate** commands, previews the shell lines, and runs them on your machine. Some actions require an administrator password (via a standard macOS prompt).
+**The switches Apple never put in System Settings.** SettingsPlus is a focused macOS app that surfaces **hidden Finder, Dock, keyboard, network, and power tweaks**—the kind you’d normally hunt for in random forum posts. Browse a clear catalog, see **before / after** previews, stage a bunch of changes, and apply when you’re happy. A few deeper changes ask for your Mac password the same way any serious settings tool does.
 
-**Requirements:** macOS. The app is not useful on other platforms; the main process exits on startup unless you set `SETTINGSPLUS_ALLOW_NON_DARWIN` (see below).
+**Requirements:** macOS only (this is a real Mac utility, not a cross-platform toy). The app won’t start on other OSes unless you set `SETTINGSPLUS_ALLOW_NON_DARWIN` for UI hacking (see below).
 
 ## About this repo
 

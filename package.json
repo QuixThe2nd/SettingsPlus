@@ -1,7 +1,7 @@
 {
   "name": "settingsplus",
   "version": "0.1.0",
-  "description": "macOS preferences and system toggles via curated CLI commands (Electron + React).",
+  "description": "Find and flip hidden macOS & Finder settings—preview first, apply when you’re ready.",
   "license": "MIT",
   "author": "SettingsPlus contributors",
   "repository": {
