@@ -1,4 +1,7 @@
-# Used by GitHub Actions only (see .github/workflows/macos-dmg.yml).
+# Used by GitHub Actions only. Set SP_DMG_SUFFIX per build:
+#   ""           → SettingsPlus-1.2.3.dmg (universal — default / recommended)
+#   "-silicon"   → Apple Silicon (arm64)
+#   "-intel"     → Intel (x64)
 # Local `npm run dist` still uses electron-builder.yml (dir target).
 appId: dev.settingsplus.app
 productName: SettingsPlus
@@ -16,6 +19,7 @@ asar: true
 
 mac:
   category: public.app-category.utilities
+  artifactName: "${productName}-${version}${env.SP_DMG_SUFFIX}.dmg"
   target:
     - dmg
   hardenedRuntime: true

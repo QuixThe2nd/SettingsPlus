@@ -41,7 +41,7 @@ npm run dev
 Two different places on GitHub—easy to mix up:
 
 1. **Actions → workflow run → Artifacts** (zip download at the bottom of a run).  
-   On every push to `main` / `master`, [`.github/workflows/macos-dmg.yml`](.github/workflows/macos-dmg.yml) builds three **unsigned** DMGs (Apple Silicon `arm64`, Intel `x64`, **universal**) and uploads them as **`SettingsPlus-dmgs-*`** artifacts. Nothing is posted to the **Releases** tab from this workflow.
+   On every push to `main` / `master`, [`.github/workflows/macos-dmg.yml`](.github/workflows/macos-dmg.yml) builds three **unsigned** DMGs and uploads them as **`SettingsPlus-dmgs-*`** artifacts. Names follow **`SettingsPlus-X.Y.Z.dmg`** (universal — default, best for almost everyone), **`SettingsPlus-X.Y.Z-silicon.dmg`** (Apple Silicon only), **`SettingsPlus-X.Y.Z-intel.dmg`** (Intel only). Nothing is posted to the **Releases** tab from this workflow.
 
 2. **Releases** (what the in-app “newer version” check uses).  
    GitHub’s API only lists **published releases**. Those are created by [`.github/workflows/release-github.yml`](.github/workflows/release-github.yml) when you push a **version tag** whose name starts with `v`:
