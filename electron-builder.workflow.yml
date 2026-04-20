@@ -25,3 +25,20 @@ mac:
   hardenedRuntime: true
   entitlements: build/entitlements.mac.plist
   entitlementsInherit: build/entitlements.mac.plist
+
+dmg:
+  window:
+    width: 560
+    height: 400
+  contents:
+    - x: 120
+      y: 220
+    - x: 260
+      y: 220
+      type: file
+      path: build/open-settingsplus.command
+      name: "Open first time.command"
+    - x: 420
+      y: 220
+      type: link
+      path: /Applications
