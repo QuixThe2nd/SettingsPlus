@@ -34,7 +34,9 @@ npm run dev
 - **Typecheck:** `npm run typecheck`
 - **Unit tests:** `npm run test`
 - **Production bundle (no installer):** `npm run build`
-- **Packaged app (unsigned OK for local use):** `npm run dist` writes `release/mac-<arch>/SettingsPlus.app` (see [electron-builder.yml](electron-builder.yml)). For sharing publicly, configure Apple **Developer ID** signing and **notarization** (see [Electron code signing](https://www.electron.build/code-signing)). DMG/zip targets can be re-enabled once a `python` shim is available for blockmap tooling, if you need auto-update metadata.
+- **Packaged app (unsigned OK for local use):** `npm run dist` writes `release/mac-<arch>/SettingsPlus.app` (see [electron-builder.yml](electron-builder.yml)). For sharing publicly, configure Apple **Developer ID** signing and **notarization** (see [Electron code signing](https://www.electron.build/code-signing)).
+
+**CI DMGs:** On every push to `main` / `master`, [`.github/workflows/macos-dmg.yml`](.github/workflows/macos-dmg.yml) builds three **unsigned** disk images (Apple Silicon `arm64`, Intel `x64`, and **universal**). Download them from the workflow run’s **Artifacts** (`SettingsPlus-dmgs-*`). CI uses [electron-builder.workflow.yml](electron-builder.workflow.yml) (DMG only); local `npm run dist` still uses the `dir` target from [electron-builder.yml](electron-builder.yml).
 
 ### Non-macOS guard
 

@@ -1,0 +1,23 @@
+# Used by GitHub Actions only (see .github/workflows/macos-dmg.yml).
+# Local `npm run dist` still uses electron-builder.yml (dir target).
+appId: dev.settingsplus.app
+productName: SettingsPlus
+copyright: Copyright © 2026 SettingsPlus contributors
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - package.json
+  - out/**/*
+
+asar: true
+
+mac:
+  category: public.app-category.utilities
+  target:
+    - dmg
+  hardenedRuntime: true
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist

@@ -1,0 +1,55 @@
+name: macOS DMGs
+
+on:
+  push:
+    branches: [main, master]
+
+concurrency:
+  group: macos-dmg-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dmg:
+    name: Build Apple Silicon, Intel, and universal DMGs
+    runs-on: macos-latest
+    permissions:
+      contents: read
+    env:
+      # Unsigned CI artifacts (no Apple Developer ID in GitHub secrets).
+      CSC_IDENTITY_AUTO_DISCOVERY: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Ensure python is on PATH (blockmap tooling)
+        run: |
+          if command -v python >/dev/null 2>&1; then
+            echo "python already available: $(command -v python)"
+          else
+            sudo mkdir -p /usr/local/bin
+            sudo ln -sf "$(command -v python3)" /usr/local/bin/python
+            echo "Linked python -> $(command -v python3)"
+          fi
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: DMG — Apple Silicon (arm64)
+        run: npx electron-builder --config electron-builder.workflow.yml --mac dmg --arm64 --publish never
+
+      - name: DMG — Intel (x64)
+        run: npx electron-builder --config electron-builder.workflow.yml --mac dmg --x64 --publish never
+
+      - name: DMG — Universal (arm64 + x64)
+        run: npx electron-builder --config electron-builder.workflow.yml --mac dmg --universal --publish never
+
+      - name: Upload DMGs
+        uses: actions/upload-artifact@v4
+        with:
+          name: SettingsPlus-dmgs-${{ github.run_number }}
+          path: release/*.dmg
+          if-no-files-found: error
