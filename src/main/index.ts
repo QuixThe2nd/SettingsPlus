@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog } from "electron";
+import { app, BrowserWindow, ipcMain, dialog, shell } from "electron";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -7,6 +7,7 @@ import type { ApplyAction, CliSettingCatalogItem } from "../catalog/types";
 import { commandNeedsAdmin, runShellCommand } from "./shell";
 import { validateCliParams } from "../shared/cliParamValidation";
 import { interpolate } from "../shared/commandTemplate";
+import { checkGitHubForNewerRelease } from "./githubReleaseCheck";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -144,8 +145,13 @@ function startMacApp(): void {
         _evt,
         payload: { id: string; mode: "read" | "set" | "reset"; params: Record<string, string> },
       ) => {
-        const item = getSettingOrThrow(payload.id);
-        return runCli(item, payload.mode, payload.params ?? {});
+        try {
+          const item = getSettingOrThrow(payload.id);
+          return await runCli(item, payload.mode, payload.params ?? {});
+        } catch (e: unknown) {
+          const msg = e instanceof Error ? e.message : String(e);
+          return { stdout: "", stderr: msg, code: 1 };
+        }
       },
     );
 
@@ -155,6 +161,20 @@ function startMacApp(): void {
       });
       if (result.canceled || result.filePaths.length === 0) return null;
       return result.filePaths[0];
+    });
+
+    ipcMain.handle("updates:checkLatest", () => checkGitHubForNewerRelease(app));
+
+    ipcMain.handle("shell:openExternal", async (_evt, url: unknown) => {
+      if (typeof url !== "string") return;
+      let parsed: URL;
+      try {
+        parsed = new URL(url);
+      } catch {
+        return;
+      }
+      if (parsed.protocol !== "https:") return;
+      await shell.openExternal(url);
     });
 
     createWindow();

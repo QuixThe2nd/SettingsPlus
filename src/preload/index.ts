@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { CliSettingCatalogItem } from "../catalog/types";
+import type { UpdateCheckResult } from "../shared/updateCheckResult";
 
 contextBridge.exposeInMainWorld("settingsPlus", {
   platform: process.platform,
@@ -13,4 +14,8 @@ contextBridge.exposeInMainWorld("settingsPlus", {
     ipcRenderer.invoke("cli:run", payload),
   pickDirectory: (): Promise<string | null> =>
     ipcRenderer.invoke("dialog:pickDirectory"),
+  checkForAppUpdates: (): Promise<UpdateCheckResult> =>
+    ipcRenderer.invoke("updates:checkLatest"),
+  openExternal: (url: string): Promise<void> =>
+    ipcRenderer.invoke("shell:openExternal", url),
 });

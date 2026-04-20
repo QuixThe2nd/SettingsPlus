@@ -14,6 +14,7 @@ jobs:
     runs-on: macos-latest
     permissions:
       contents: read
+      actions: write
     env:
       # Unsigned CI artifacts (no Apple Developer ID in GitHub secrets).
       CSC_IDENTITY_AUTO_DISCOVERY: false

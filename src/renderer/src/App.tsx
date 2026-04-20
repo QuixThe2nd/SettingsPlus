@@ -8,7 +8,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import { ChevronRight, Shield, Sparkles } from "lucide-react";
+import { ChevronRight, Download, Shield, Sparkles, X } from "lucide-react";
 import type { CliSettingCatalogItem } from "@/catalog/types";
 import { unionPlaceholders } from "@/shared/commandTemplate";
 import {
@@ -20,8 +20,10 @@ import {
   ToolIcon,
 } from "./catalogVisuals";
 import { EmptyFlowVisual, SettingPreview } from "./SettingPreview";
+import type { UpdateCheckResult } from "@/shared/updateCheckResult";
 
 const ALL = "__all__";
+const UPDATE_DISMISS_PREFIX = "sp-dismiss-update:";
 
 const DEFAULT_PARAMS: Record<string, string> = {
   enabled: "true",
@@ -159,6 +161,25 @@ export function App(): ReactElement {
     batchApplyIds?: string[];
   } | null>(null);
   const [destructiveTyped, setDestructiveTyped] = useState("");
+  const [updateBanner, setUpdateBanner] = useState<{
+    latestVersion: string;
+    htmlUrl: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const api = window.settingsPlus;
+    if (!api?.checkForAppUpdates) return;
+    void api.checkForAppUpdates().then((r: UpdateCheckResult) => {
+      if (r.status !== "update_available") return;
+      const key = `${UPDATE_DISMISS_PREFIX}${r.latestVersion}`;
+      try {
+        if (sessionStorage.getItem(key)) return;
+      } catch {
+        /* private mode */
+      }
+      setUpdateBanner({ latestVersion: r.latestVersion, htmlUrl: r.htmlUrl });
+    });
+  }, []);
 
   useEffect(() => {
     const api = window.settingsPlus;
@@ -585,6 +606,45 @@ export function App(): ReactElement {
             </button>
           </div>
         </header>
+
+        {updateBanner ? (
+          <div className="ss-update-banner" role="status">
+            <span className="ss-update-banner-text">
+              A newer release is on GitHub{" "}
+              <span className="ss-update-version">({updateBanner.latestVersion})</span>.
+            </span>
+            <div className="ss-update-banner-actions">
+              <button
+                type="button"
+                className="ss-btn ss-btn-default ss-btn-compact"
+                onClick={() => {
+                  void window.settingsPlus?.openExternal(updateBanner.htmlUrl);
+                }}
+              >
+                <Download size={14} aria-hidden />
+                View release
+              </button>
+              <button
+                type="button"
+                className="ss-btn ss-btn-icon ss-update-dismiss"
+                aria-label="Dismiss update notice"
+                onClick={() => {
+                  try {
+                    sessionStorage.setItem(
+                      `${UPDATE_DISMISS_PREFIX}${updateBanner.latestVersion}`,
+                      "1",
+                    );
+                  } catch {
+                    /* ignore */
+                  }
+                  setUpdateBanner(null);
+                }}
+              >
+                <X size={16} strokeWidth={2} aria-hidden />
+              </button>
+            </div>
+          </div>
+        ) : null}
 
         <div className="ss-main-inner">
           <div className="ss-list-pane">

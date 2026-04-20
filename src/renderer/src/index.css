@@ -416,6 +416,62 @@ body {
   color: var(--ss-accent);
 }
 
+.ss-update-banner {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
+  padding: 9px 18px 10px;
+  border-bottom: 1px solid var(--ss-divider);
+  background: color-mix(in srgb, var(--ss-accent-soft) 55%, var(--ss-inset));
+  font-size: 13px;
+  color: var(--ss-text-secondary);
+}
+
+.ss-update-banner-text {
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.ss-update-version {
+  font-weight: 650;
+  color: var(--ss-text);
+}
+
+.ss-update-banner-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.ss-btn-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+}
+
+.ss-btn-icon {
+  width: 28px;
+  padding: 0;
+  justify-content: center;
+}
+
+.ss-update-dismiss {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ss-text-tertiary);
+}
+
+.ss-update-dismiss:hover {
+  background: var(--ss-accent-soft);
+  color: var(--ss-text);
+}
+
 .ss-breadcrumb {
   font-size: 13px;
   font-weight: 600;

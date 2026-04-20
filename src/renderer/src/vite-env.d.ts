@@ -2,6 +2,7 @@
 /// <reference types="react" />
 
 import type { CliSettingCatalogItem } from "@/catalog/types";
+import type { UpdateCheckResult } from "@/shared/updateCheckResult";
 
 export interface SettingsPlusApi {
   readonly platform: string;
@@ -12,6 +13,8 @@ export interface SettingsPlusApi {
     params: Record<string, string>;
   }): Promise<{ stdout: string; stderr: string; code: number }>;
   pickDirectory(): Promise<string | null>;
+  checkForAppUpdates(): Promise<UpdateCheckResult>;
+  openExternal(url: string): Promise<void>;
 }
 
 declare global {
