@@ -6,7 +6,7 @@
   "author": "SettingsPlus contributors",
   "repository": {
     "type": "git",
-    "url": "https://github.com/parsa/SettingsPlus.git"
+    "url": "https://github.com/QuixThe2nd/SettingsPlus.git"
   },
   "type": "module",
   "main": "out/main/index.js",
